@@ -48,7 +48,6 @@ class DatabaseManager:
             cursor.execute('''CREATE TABLE IF NOT EXISTS orders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
-                total_price REAL,
                 status TEXT,
                 FOREIGN KEY (user_id) REFERENCES users (id))''')
 
@@ -58,13 +57,12 @@ class DatabaseManager:
                 order_id INTEGER,
                 product_id INTEGER,
                 quantity INTEGER,
-                sum_price REAL,
                 FOREIGN KEY (order_id) REFERENCES orders (id),
                 FOREIGN KEY (product_id) REFERENCES products (id))''')
             
             conn.commit()
 
-    # --- BEISPIEL-METHODEN FÜR DEN MVP ---
+    # Methoden
 
     def add_product(self, product: Product):
         with self._get_connection() as conn:
@@ -87,7 +85,7 @@ class DatabaseManager:
     def get_product_by_id(self, product_id):
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM products WHERE product_id = ?", (product_id,))
+            cursor.execute("SELECT * FROM products WHERE id = ?", (product_id,))
             row = cursor.fetchone()
             if row:
                 return Product(
@@ -99,7 +97,6 @@ class DatabaseManager:
                 )
             return None
             
-
     def get_products_by_category(self, category_id):        
         with self._get_connection() as conn:
             cursor = conn.cursor()
@@ -107,6 +104,8 @@ class DatabaseManager:
             rows = cursor.fetchall()
             return [Product(row['id'], row['name'], row['description'], 
                             row['price'], row['category_id']) for row in rows]
+
+
 
     def get_user_by_email(self, email):
         with self._get_connection() as conn:
@@ -116,3 +115,50 @@ class DatabaseManager:
             if row:
                 return User(row['id'], row['name'], row['email'], row['password'], row['role'])
             return None
+        
+
+
+    def get_order_items_by_order(self, order_id):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM order_items WHERE order_id = ?", (order_id,))
+            rows = cursor.fetchall()
+            return [
+                OrderItem(row['id'], row['order_id'], row['product_id'], row['quantity'])
+                for row in rows
+            ]
+        
+    def get_order_by_id(self, order_id):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM orders WHERE id = ?", (order_id,))
+            row = cursor.fetchone()
+            if not row:
+                return None
+            items = self.get_order_items_by_order(order_id)
+            return Order(row['id'], row['user_id'], row['status'], items)
+
+    def add_order(self, order: Order):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO orders (user_id, status) VALUES (?, ?)",
+                (order.user_id, order.status),
+            )
+            order.id = cursor.lastrowid
+            for item in order.items:
+                item.order_id = order.id
+                self.add_order_item(item)
+            conn.commit()
+            return order.id
+
+    def add_order_item(self, order_item: OrderItem):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)",
+                (order_item.order_id, order_item.product_id, order_item.quantity),
+            )
+            order_item.id = cursor.lastrowid
+            conn.commit()
+            return order_item.id
