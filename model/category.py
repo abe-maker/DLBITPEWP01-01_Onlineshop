@@ -6,6 +6,12 @@ class Category:
         self.name = name
         self.description = description
 
+    def get_products(self, db_manager):
+        # Ruft Produkte direkt aus der Datenbank ab
+        return db_manager.get_products_by_category(self.id)
+    
+
 
     def __repr__(self):
-        return f"User(id={self.id}, name='{self.name}', email='{self.email}', role='{self.role}')"
+        return f"Category(id={self.id}, name='{self.name}', description='{self.description}')"
+    
