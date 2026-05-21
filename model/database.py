@@ -112,6 +112,12 @@ class DatabaseManager:
         return [Product(row['id'], row['name'], row['description'], 
                         row['price'], row['category_id']) for row in rows]
 
+    def get_all_categories(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM categories")
+        rows = cursor.fetchall()
+        return [Category(row['id'], row['name'], row['description']) for row in rows]
+
         
     def get_order_by_id(self, order_id):
         cursor = self.conn.cursor()

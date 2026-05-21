@@ -4,7 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-from .views import views
+from controller.views import views
 
 db = SQLAlchemy()
 DB_NAME = "database.db"

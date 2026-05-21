@@ -1,71 +1,113 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
+{% extends "base.html" %}
+
+{% block title %}Einkaufswagen{% endblock %}
+
+{% block content %}
 <div class="max-w-7xl mx-auto px-4 py-10">
-  <!-- Willkommen Section -->
-  <div class="text-center mb-12">
-    <h1 class="text-5xl font-bold mb-4">WILLKOMMEN</h1>
-    <p class="text-xl text-gray-600">im Webshop</p>
-  </div>
+  <h1 class="text-3xl font-bold mb-6">Einkaufswagen</h1>
 
-  <!-- Produkte Section -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- Item One -->
-    <div
-      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-    >
-      <div
-        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
-      >
-        <span class="text-gray-400">Produktbild</span>
-      </div>
-      <div class="p-4">
-        <h5 class="text-lg font-semibold mb-2">Item One</h5>
-        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
-        <button
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-        >
-          In den Warenkorb
-        </button>
+    <!-- Left: Items -->
+    <div class="md:col-span-2">
+      <div class="space-y-6">
+        {% if cart_items and cart_items|length > 0 %}
+          {% for item in cart_items %}
+          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <select name="quantity_{{ loop.index }}" class="border rounded px-2 py-1">
+                {% for i in range(1,11) %}
+                <option value="{{ i }}" {% if i == item.quantity %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+              </select>
+              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
+                <span class="text-gray-400">Bild</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-medium">{{ item.name }}</h3>
+                <p class="text-sm text-gray-600">{{ item.description or "Beschreibung" }}</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <form action="/cart/remove" method="post">
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <!-- Beispiel-Einträge, falls keine Daten vorhanden -->
+          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <select class="border rounded px-2 py-1">
+                <option>1</option>
+              </select>
+              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
+                <span class="text-gray-400">Bild</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-medium">Item One</h3>
+                <p class="text-sm text-gray-600">Kurzbeschreibung</p>
+              </div>
+            </div>
+            <div>
+              <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <select class="border rounded px-2 py-1">
+                <option>1</option>
+              </select>
+              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
+                <span class="text-gray-400">Bild</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-medium">Item Two</h3>
+                <p class="text-sm text-gray-600">Kurzbeschreibung</p>
+              </div>
+            </div>
+            <div>
+              <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <select class="border rounded px-2 py-1">
+                <option>1</option>
+              </select>
+              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
+                <span class="text-gray-400">Bild</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-medium">Item Three</h3>
+                <p class="text-sm text-gray-600">Kurzbeschreibung</p>
+              </div>
+            </div>
+            <div>
+              <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
 
-    <!-- Item Two -->
-    <div
-      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-    >
-      <div
-        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
-      >
-        <span class="text-gray-400">Produktbild</span>
-      </div>
-      <div class="p-4">
-        <h5 class="text-lg font-semibold mb-2">Item Two</h5>
-        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
-        <button
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-        >
-          In den Warenkorb
-        </button>
-      </div>
-    </div>
-
-    <!-- Item Three -->
-    <div
-      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-    >
-      <div
-        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
-      >
-        <span class="text-gray-400">Produktbild</span>
-      </div>
-      <div class="p-4">
-        <h5 class="text-lg font-semibold mb-2">Item Three</h5>
-        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
-        <button
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-        >
-          In den Warenkorb
-        </button>
+    <!-- Right: Summary / Kaufen -->
+    <div class="md:col-span-1 flex items-start">
+      <div class="w-full bg-white border rounded p-6 shadow">
+        <p class="text-lg font-semibold mb-4">Bestellung</p>
+        <div class="text-sm text-gray-600 mb-4">
+          <div class="flex justify-between"><span>Zwischensumme</span><span>€99.00</span></div>
+          <div class="flex justify-between"><span>Versand</span><span>€0.00</span></div>
+          <div class="flex justify-between font-bold mt-3"><span>Gesamt</span><span>€99.00</span></div>
+        </div>
+        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">Kaufen</button>
       </div>
     </div>
   </div>

@@ -1,72 +1,57 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
+{% extends "base.html" %}
+
+{% block title %}Alle Produkte{% endblock %}
+
+{% block content %}
 <div class="max-w-7xl mx-auto px-4 py-10">
-  <!-- Willkommen Section -->
-  <div class="text-center mb-12">
-    <h1 class="text-5xl font-bold mb-4">WILLKOMMEN</h1>
-    <p class="text-xl text-gray-600">im Webshop</p>
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-bold">Alle Produkte</h1>
+    <form method="get" action="/product-list" class="flex items-center space-x-3">
+      <label for="category" class="sr-only">Kategorie</label>
+      <select id="category" name="category" class="border rounded px-3 py-2">
+        <option value="">Alle Kategorien</option>
+        {% if categories %}
+          {% for cat in categories %}
+          <option value="{{ cat.id }}" {% if request.args.get('category') == cat.id|string %}selected{% endif %}>{{ cat.name }}</option>
+          {% endfor %}
+        {% endif %}
+      </select>
+      <button type="submit" class="bg-gray-100 border px-3 py-2 rounded">Filter</button>
+    </form>
   </div>
 
-  <!-- Produkte Section -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- Item One -->
-    <div
-      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-    >
-      <div
-        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
-      >
-        <span class="text-gray-400">Produktbild</span>
-      </div>
-      <div class="p-4">
-        <h5 class="text-lg font-semibold mb-2">Item One</h5>
-        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
-        <button
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-        >
-          In den Warenkorb
-        </button>
-      </div>
-    </div>
-
-    <!-- Item Two -->
-    <div
-      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-    >
-      <div
-        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
-      >
-        <span class="text-gray-400">Produktbild</span>
-      </div>
-      <div class="p-4">
-        <h5 class="text-lg font-semibold mb-2">Item Two</h5>
-        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
-        <button
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-        >
-          In den Warenkorb
-        </button>
-      </div>
-    </div>
-
-    <!-- Item Three -->
-    <div
-      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-    >
-      <div
-        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
-      >
-        <span class="text-gray-400">Produktbild</span>
-      </div>
-      <div class="p-4">
-        <h5 class="text-lg font-semibold mb-2">Item Three</h5>
-        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
-        <button
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
-        >
-          In den Warenkorb
-        </button>
-      </div>
+  <div class="bg-white border rounded p-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {% if products and products|length > 0 %}
+        {% for product in products %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+          <a href="/product/{{ product.id }}" class="block bg-gray-100 h-48 flex items-center justify-center border-b border-gray-200">
+            {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="object-contain h-48" />
+            {% else %}
+            <span class="text-gray-400">Bild</span>
+            {% endif %}
+          </a>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-medium mb-1">{{ product.name }}</h3>
+              <p class="text-sm text-gray-600 mb-3">{{ product.description or '' }}</p>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center justify-between">
+                <span class="text-lg font-semibold">€{{ "%.2f"|format(product.price) }}</span>
+                <form action="/cart/add" method="post">
+                  <input type="hidden" name="product_id" value="{{ product.id }}">
+                  <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded">In den Warenkorb</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-span-1 sm:col-span-2 md:col-span-4 text-center text-gray-500 py-12">Keine Produkte gefunden.</div>
+      {% endif %}
     </div>
   </div>
 </div>

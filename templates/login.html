@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-12 p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4">Login</h2>
+  <form action="/login" method="post" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Email</label>
+      <input type="email" name="email" required class="mt-1 block w-full border rounded px-3 py-2" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Passwort</label>
+      <input type="password" name="password" required class="mt-1 block w-full border rounded px-3 py-2" />
+    </div>
+    <div>
+      <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">Anmelden</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
