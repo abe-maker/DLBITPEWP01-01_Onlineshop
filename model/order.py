@@ -10,10 +10,16 @@ class Order:
     @property
     def total_price(self):
         #Berechnet die Gesamtsummer der Bestellung
-        return sum(item.sum_price * item in self.items)
+        return sum(item.sum_price for item in self.items)
     
     def add_item(self, new_product):
-        self.items.append(new_product)
+        self.items.append(OrderItem(
+            id = None,
+            order_id = self.id,
+            product_id = new_product.id,
+            quantity = 1,
+            unit_price = new_product.price
+            ))
 
     def remove_item(self, product):
         self.items.remove(product)

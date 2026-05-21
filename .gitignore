@@ -3,3 +3,5 @@ __pycache__/
 
 #Database files
 shop_test.db
+
+.venv/

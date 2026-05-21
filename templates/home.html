@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <!-- Willkommen Section -->
+  <div class="text-center mb-12">
+    <h1 class="text-5xl font-bold mb-4">WILLKOMMEN</h1>
+    <p class="text-xl text-gray-600">im Webshop</p>
+  </div>
+
+  <!-- Produkte Section -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Item One -->
+    <div
+      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+    >
+      <div
+        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
+      >
+        <span class="text-gray-400">Produktbild</span>
+      </div>
+      <div class="p-4">
+        <h5 class="text-lg font-semibold mb-2">Item One</h5>
+        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
+        <button
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+        >
+          In den Warenkorb
+        </button>
+      </div>
+    </div>
+
+    <!-- Item Two -->
+    <div
+      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+    >
+      <div
+        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
+      >
+        <span class="text-gray-400">Produktbild</span>
+      </div>
+      <div class="p-4">
+        <h5 class="text-lg font-semibold mb-2">Item Two</h5>
+        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
+        <button
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+        >
+          In den Warenkorb
+        </button>
+      </div>
+    </div>
+
+    <!-- Item Three -->
+    <div
+      class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+    >
+      <div
+        class="bg-gray-100 h-48 flex items-center justify-center border border-gray-300"
+      >
+        <span class="text-gray-400">Produktbild</span>
+      </div>
+      <div class="p-4">
+        <h5 class="text-lg font-semibold mb-2">Item Three</h5>
+        <p class="text-gray-600 mb-4">Produktbeschreibung</p>
+        <button
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+        >
+          In den Warenkorb
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
