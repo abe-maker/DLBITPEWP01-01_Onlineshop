@@ -1,0 +1,110 @@
+{% extends 'base.html' %} {% block title %}Adminbereich{% endblock %} {% block
+content %}
+<div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+  <h1 class="text-3xl font-bold mb-8">Adminbereich</h1>
+
+  <div class="grid gap-10 lg:grid-cols-2">
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-2xl font-semibold mb-4">Produkt hinzufügen</h2>
+      <form method="post" class="space-y-4">
+        <input type="hidden" name="add_product" value="1" />
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Name</label>
+          <input
+            type="text"
+            name="name"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="Produktname"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700"
+            >Beschreibung</label
+          >
+          <textarea
+            name="description"
+            rows="3"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="Beschreibung"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Preis</label>
+          <input
+            type="text"
+            name="price"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="9.99"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700"
+            >Kategorie</label
+          >
+          <select
+            name="category_id"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          >
+            <option value="">Keine Kategorie</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+        >
+          Produkt hinzufügen
+        </button>
+      </form>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-semibold">Produkte verwalten</h2>
+      </div>
+
+      {% if products and products|length > 0 %}
+      <div class="space-y-4">
+        {% for product in products %}
+        <div
+          class="rounded-lg border border-gray-200 p-4 sm:flex sm:justify-between sm:items-center"
+        >
+          <div>
+            <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+            <p class="text-sm text-gray-600">
+              {{ product.description or 'Keine Beschreibung' }}
+            </p>
+            <p class="text-sm text-gray-700 mt-2">
+              Preis: €{{ '%.2f' | format(product.price) }} | Kategorie: {{
+              product.category_id or 'Keine' }}
+            </p>
+          </div>
+          <form method="post" class="mt-4 sm:mt-0">
+            <input type="hidden" name="delete_product" value="1" />
+            <input type="hidden" name="product_id" value="{{ product.id }}" />
+            <button
+              type="submit"
+              class="inline-flex items-center rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+            >
+              Löschen
+            </button>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-gray-600">Es sind noch keine Produkte vorhanden.</p>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

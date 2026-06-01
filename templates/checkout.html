@@ -1,0 +1,127 @@
+{% extends "base.html" %} {% block title %}Checkout{% endblock %} {% block
+content %}
+<a
+  href="/cart"
+  class="inline-flex items-center text-indigo-600 hover:text-indigo-700 rounded mt-10 mx-10 px-2 py-2 border border-indigo-600"
+>
+  <svg
+    class="w-4 h-4 mr-2"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M15 19l-7-7 7-7"
+    ></path>
+  </svg>
+  Zurück zum Warenkorb
+</a>
+<div class="max-w-7xl mx-auto px-4">
+  <div class="flex items-left mb-8">
+    <h1 class="text-4xl font-bold mx-5">Checkout</h1>
+    <div class="w-24"></div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div class="bg-white border rounded-xl shadow-sm p-6">
+      <h2 class="text-2xl font-semibold mb-6">Deine Bestellung</h2>
+      <div class="space-y-4">
+        {% if order_items and order_items|length > 0 %} {% for entry in
+        order_items %}
+        <div class="rounded-xl border border-gray-200 p-4">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="text-lg font-semibold">{{ entry.product.name }}</h3>
+              <p class="text-sm text-gray-600 mt-1">
+                Menge: {{ entry.item.quantity }}
+              </p>
+            </div>
+            <span class="font-semibold"
+              >€{{ "%.2f"|format(entry.item.quantity * entry.product.price)
+              }}</span
+            >
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="text-gray-600">Dein Warenkorb ist leer.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="bg-white border rounded-xl shadow-sm p-6">
+      <h2 class="text-2xl font-semibold mb-6">Lieferadresse</h2>
+      <form action="/checkout/complete" method="post" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Name</label
+          >
+          <input
+            type="text"
+            name="name"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="Max Mustermann"
+            required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Postleitzahl</label
+          >
+          <input
+            type="text"
+            name="zipcode"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="12345"
+            required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Stadt</label
+          >
+          <input
+            type="text"
+            name="city"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="Musterstadt"
+            required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Straße</label
+          >
+          <input
+            type="text"
+            name="street"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="Musterstraße"
+            required
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Hausnummer</label
+          >
+          <input
+            type="text"
+            name="house_number"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            placeholder="12a"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition"
+        >
+          Kaufen mit PayPal
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

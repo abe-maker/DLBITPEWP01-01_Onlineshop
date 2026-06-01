@@ -19,14 +19,26 @@
           <div class="text-2xl font-bold">Logo</div>
           <div class="hidden md:flex space-x-6">
             <a href="/" class="hover:text-gray-300 transition">HOME</a>
-            {% if user is defined and user is not none and user.is_authenticated %}
-            <a href="/product-list" class="hover:text-gray-300 transition">ALLE PRODUKTE</a>
-            <a href="/cart" class="hover:text-gray-300 transition">EINKAUFSWAGEN</a>
+            {% if user is defined and user is not none and user.is_authenticated
+            %}
+            <a href="/product-list" class="hover:text-gray-300 transition"
+              >ALLE PRODUKTE</a
+            >
+            <a href="/cart" class="hover:text-gray-300 transition"
+              >EINKAUFSWAGEN</a
+            >
             <a href="/logout" class="hover:text-gray-300 transition">Logout</a>
             {% else %}
-            <a href="/product-list" class="hover:text-gray-300 transition">ALLE PRODUKTE</a>
+            <a href="/product-list" class="hover:text-gray-300 transition"
+              >ALLE PRODUKTE</a
+            >
             <a href="/login" class="hover:text-gray-300 transition">LOGIN</a>
-            <a href="/cart" class="hover:text-gray-300 transition">EINKAUFSWAGEN</a>
+            <a href="/cart" class="hover:text-gray-300 transition"
+              >EINKAUFSWAGEN</a
+            >
+            <a href="/admin" class="hover:text-gray-300 transition"
+              >ADMINBEREICH</a
+            >
             {% endif %}
           </div>
           <!-- Mobile Menu Button -->
@@ -37,14 +49,27 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
           <a href="/" class="block hover:text-gray-300 transition">HOME</a>
-          {% if user is defined and user is not none and user.is_authenticated %}
-          <a href="/product-list" class="block hover:text-gray-300 transition">ALLE PRODUKTE</a>
-          <a href="/cart" class="block hover:text-gray-300 transition">EINKAUFSWAGEN</a>
-          <a href="/logout" class="block hover:text-gray-300 transition">Logout</a>
+          {% if user is defined and user is not none and user.is_authenticated
+          %}
+          <a href="/product-list" class="block hover:text-gray-300 transition"
+            >ALLE PRODUKTE</a
+          >
+          <a href="/cart" class="block hover:text-gray-300 transition"
+            >EINKAUFSWAGEN</a
+          >
+          <a href="/logout" class="block hover:text-gray-300 transition"
+            >Logout</a
+          >
           {% else %}
-          <a href="/product-list" class="block hover:text-gray-300 transition">ALLE PRODUKTE</a>
-          <a href="/login" class="block hover:text-gray-300 transition">LOGIN</a>
-          <a href="/cart" class="block hover:text-gray-300 transition">EINKAUFSWAGEN</a>
+          <a href="/product-list" class="block hover:text-gray-300 transition"
+            >ALLE PRODUKTE</a
+          >
+          <a href="/login" class="block hover:text-gray-300 transition"
+            >LOGIN</a
+          >
+          <a href="/cart" class="block hover:text-gray-300 transition"
+            >EINKAUFSWAGEN</a
+          >
           {% endif %}
         </div>
       </div>
@@ -88,7 +113,7 @@
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center py-6 mt-12">
-      <p>&copy; 2026 Webshop. All rights reserved.</p>
+      <p>&copy; 2026 Webshop.</p>
     </footer>
 
     <script>

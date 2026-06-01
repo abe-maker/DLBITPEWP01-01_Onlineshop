@@ -1,8 +1,5 @@
-{% extends "base.html" %}
-
-{% block title %}Einkaufswagen{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Einkaufswagen{% endblock %} {% block
+content %}
 <div class="max-w-7xl mx-auto px-4 py-10">
   <h1 class="text-3xl font-bold mb-6">Einkaufswagen</h1>
 
@@ -10,104 +7,89 @@
     <!-- Left: Items -->
     <div class="md:col-span-2">
       <div class="space-y-6">
-        {% if cart_items and cart_items|length > 0 %}
-          {% for item in cart_items %}
-          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <select name="quantity_{{ loop.index }}" class="border rounded px-2 py-1">
-                {% for i in range(1,11) %}
-                <option value="{{ i }}" {% if i == item.quantity %}selected{% endif %}>{{ i }}</option>
-                {% endfor %}
-              </select>
-              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
-                <span class="text-gray-400">Bild</span>
-              </div>
-              <div>
-                <h3 class="text-lg font-medium">{{ item.name }}</h3>
-                <p class="text-sm text-gray-600">{{ item.description or "Beschreibung" }}</p>
-              </div>
+        {% if order_items and order_items|length > 0 %} {% for entry in
+        order_items %}
+        <div
+          class="bg-white p-4 rounded shadow flex items-center justify-between"
+        >
+          <div class="flex items-center space-x-4 flex-1">
+            <div
+              class="w-16 h-16 bg-gray-100 flex items-center justify-center rounded flex-shrink-0"
+            >
+              <span class="text-gray-400 text-sm">Bild</span>
             </div>
-            <div class="flex items-center space-x-4">
-              <form action="/cart/remove" method="post">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
-              </form>
+            <div class="flex-1">
+              <h3 class="text-lg font-medium">{{ entry.product.name }}</h3>
+              <p class="text-sm text-gray-600">
+                {{ entry.product.description or "Keine Beschreibung" }}
+              </p>
+              <p class="text-sm font-semibold mt-2">
+                €{{ "%.2f"|format(entry.product.price) }}
+              </p>
             </div>
-          </div>
-          {% endfor %}
-        {% else %}
-          <!-- Beispiel-Einträge, falls keine Daten vorhanden -->
-          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <select class="border rounded px-2 py-1">
-                <option>1</option>
-              </select>
-              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
-                <span class="text-gray-400">Bild</span>
-              </div>
-              <div>
-                <h3 class="text-lg font-medium">Item One</h3>
-                <p class="text-sm text-gray-600">Kurzbeschreibung</p>
-              </div>
-            </div>
-            <div>
-              <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
+            <div class="flex items-center space-x-2">
+              <span class="text-gray-600"
+                >Menge: {{ entry.item.quantity }}</span
+              >
             </div>
           </div>
-
-          <hr class="my-4">
-
-          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <select class="border rounded px-2 py-1">
-                <option>1</option>
-              </select>
-              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
-                <span class="text-gray-400">Bild</span>
-              </div>
-              <div>
-                <h3 class="text-lg font-medium">Item Two</h3>
-                <p class="text-sm text-gray-600">Kurzbeschreibung</p>
-              </div>
-            </div>
-            <div>
-              <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
-            </div>
+          <div class="flex items-center space-x-4 flex-shrink-0">
+            <span class="font-semibold text-lg"
+              >€{{ "%.2f"|format(entry.item.quantity * entry.product.price)
+              }}</span
+            >
+            <form action="/cart/remove" method="post">
+              <input type="hidden" name="item_id" value="{{ entry.item.id }}" />
+              <button
+                type="submit"
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+              >
+                Entfernen
+              </button>
+            </form>
           </div>
-
-          <hr class="my-4">
-
-          <div class="bg-white p-4 rounded shadow flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <select class="border rounded px-2 py-1">
-                <option>1</option>
-              </select>
-              <div class="w-12 h-12 bg-gray-100 flex items-center justify-center rounded">
-                <span class="text-gray-400">Bild</span>
-              </div>
-              <div>
-                <h3 class="text-lg font-medium">Item Three</h3>
-                <p class="text-sm text-gray-600">Kurzbeschreibung</p>
-              </div>
-            </div>
-            <div>
-              <button class="bg-gray-100 border rounded px-3 py-1">Entfernen</button>
-            </div>
-          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="bg-white p-6 rounded shadow text-center text-gray-600">
+          <p>Der Einkaufswagen ist leer.</p>
+          <a
+            href="/product-list"
+            class="text-blue-500 hover:text-blue-600 mt-4 inline-block"
+            >Zum Einkaufen</a
+          >
+        </div>
         {% endif %}
       </div>
     </div>
 
     <!-- Right: Summary / Kaufen -->
-    <div class="md:col-span-1 flex items-start">
-      <div class="w-full bg-white border rounded p-6 shadow">
+    <div class="md:col-span-1">
+      <div class="bg-white border rounded p-6 shadow sticky top-4">
         <p class="text-lg font-semibold mb-4">Bestellung</p>
         <div class="text-sm text-gray-600 mb-4">
-          <div class="flex justify-between"><span>Zwischensumme</span><span>€99.00</span></div>
-          <div class="flex justify-between"><span>Versand</span><span>€0.00</span></div>
-          <div class="flex justify-between font-bold mt-3"><span>Gesamt</span><span>€99.00</span></div>
+          {% set subtotal = order.total_price if order and order.items else 0 %}
+          <div class="flex justify-between mb-2">
+            <span>Zwischensumme</span
+            ><span>€{{ "%.2f"|format(subtotal) }}</span>
+          </div>
+          <div class="flex justify-between font-bold border-t pt-3">
+            <span>Gesamt</span><span>€{{ "%.2f"|format(subtotal) }}</span>
+          </div>
         </div>
-        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">Kaufen</button>
+        {% if order_items and order_items|length > 0 %}
+        <a
+          href="/checkout"
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-8 rounded"
+          >Bestellen</a
+        >
+        {% else %}
+        <button
+          disabled
+          class="w-full bg-gray-300 text-gray-600 py-2 rounded cursor-not-allowed"
+        >
+          Bestellen
+        </button>
+        {% endif %}
       </div>
     </div>
   </div>

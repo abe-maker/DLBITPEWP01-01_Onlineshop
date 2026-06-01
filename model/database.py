@@ -6,7 +6,7 @@ from .order import Order
 from .order_item import OrderItem
 
 class DatabaseManager:
-    def __init__(self, db_path="shop.db"):
+    def __init__(self, db_path="database.db"):
         self.db_path = db_path
         self.conn = sqlite3.connect(self.db_path, timeout = 20)
         self.conn.row_factory = sqlite3.Row
@@ -83,6 +83,13 @@ class DatabaseManager:
         )
         self.conn.commit()
 
+    def remove_product_by_id(self, product_id):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "DELETE FROM products WHERE id = ?", (product_id,)
+        )
+        self.conn.commit()
+
     def get_all_products(self):
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM products")
@@ -125,8 +132,63 @@ class DatabaseManager:
         row = cursor.fetchone()
         if not row:
             return None
+        order = Order(row['id'], row['user_id'], row['status'])
         items = self.get_order_items_by_order(order_id)
-        return Order(row['id'], row['user_id'], row['status'], items)
+        order.items = items
+        return order
+
+    def get_order_items_by_order(self, order_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM order_items WHERE order_id = ?", (order_id,))
+        rows = cursor.fetchall()
+        return [OrderItem(row['id'], row['order_id'], row['product_id'], row['quantity'], 0) for row in rows]
+
+    def get_active_order(self, user_id=1):
+        """Get the current open order for a user."""
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM orders WHERE user_id = ? AND status = 'offen' LIMIT 1", (user_id,))
+        row = cursor.fetchone()
+        if not row:
+            return None
+        order = Order(row['id'], row['user_id'], row['status'])
+        items = self.get_order_items_by_order(row['id'])
+        order.items = items
+        return order
+
+    def create_order(self, user_id=1):
+        """Create a new open order."""
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "INSERT INTO orders (user_id, status) VALUES (?, ?)",
+            (user_id, 'offen'),
+        )
+        self.conn.commit()
+        order_id = cursor.lastrowid
+        return Order(order_id, user_id, 'offen')
+
+    def item_in_order(self, order_id, product_id):
+        """Check if a product is already in the order."""
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "SELECT * FROM order_items WHERE order_id = ? AND product_id = ?",
+            (order_id, product_id)
+        )
+        return cursor.fetchone() is not None
+
+    def update_order_item_quantity(self, order_id, product_id, quantity):
+        """Update quantity of a product in an order."""
+        cursor = self.conn.cursor()
+        cursor.execute(
+            "UPDATE order_items SET quantity = ? WHERE order_id = ? AND product_id = ?",
+            (quantity, order_id, product_id)
+        )
+        self.conn.commit()
+
+    def delete_order_item(self, order_item_id):
+        """Delete an order item."""
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM order_items WHERE id = ?", (order_item_id,))
+        self.conn.commit()
 
     def add_order(self, order: Order):
         cursor = self.conn.cursor()
